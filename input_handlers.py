@@ -7,7 +7,7 @@ import tcod.event
 # import action class and subclasses
 from actions import Action, EscapeAction, MovementAction
 
-class EventHandler(tcod.event.EventDispath[Action]):
+class EventHandler(tcod.event.EventDispatch[Action]):
     #event for quitting program
     def ev_quit(self, event: tcod.event.Quit) -> Optional[Action]:
         raise SystemExit()

@@ -44,7 +44,7 @@ def main() -> None:
 
             for event in tcod.event.wait():
                 # send event to event_handler "dispatch" method
-                action = event_handler.dispath(event)
+                action = event_handler.dispatch(event)
 
                 if action is None:
                     continue
