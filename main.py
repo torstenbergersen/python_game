@@ -42,6 +42,9 @@ def main() -> None:
             # update screen with current information
             context.present(root_console)
 
+            # clear console after movement
+            root_console.clear()
+
             for event in tcod.event.wait():
                 # send event to event_handler "dispatch" method
                 action = event_handler.dispatch(event)
