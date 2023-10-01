@@ -32,7 +32,7 @@ def main() -> None:
         while True:
             
             # create @ symbol and put in place
-            root_console.print(x=1, y=1, string="@")
+            root_console.print(x=player_x, y=player_y, string="@")
 
             # update screen with current information
             context.present(root_console)
