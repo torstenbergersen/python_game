@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import tcod
 
-from actions import EscapeAction, MovementAction
+from engine import Engine
 from entity import Entity
 from input_handlers import EventHandler
 
@@ -23,6 +23,8 @@ def main() -> None:
     npc = Entity(int(screen_width / 2 - 5), int(screen_height / 2), "@", (255, 255, 0))
     entities = {npc, player}
 
+    engine = Engine(entities=entities, event_handler=event_handler, player=player)
+
     # create screen and title
     with tcod.context.new_terminal(
         screen_width,
@@ -34,34 +36,15 @@ def main() -> None:
     ) as context:
         # creates 'console'
         root_console = tcod.Console(screen_width, screen_height, order="F")
-        # change order of y,x to x,y in numpy
         
         # game loop
         while True:
-            
-            # Draw function
-            root_console.print(x=player.x, y=player.y, string=player.char, fg=player.color)
 
-            # update screen with current information
-            context.present(root_console)
+            engine.render(console=root_console, context=context)
 
-            # clear console after movement
-            root_console.clear()
+            events = tcod.event.wait()
 
-            for event in tcod.event.wait():
-                # send event to event_handler "dispatch" method
-                action = event_handler.dispatch(event)
-
-                if action is None:
-                    continue
-
-                # update coordinates with movement action
-                if isinstance(action, MovementAction):
-                    player.move(dx=action.dx, dy=action.dy)
-                
-                elif isinstance(action, EscapeAction):
-                    raise SystemExit()
-
+            engine.handle_events(events)
 
 if __name__ == "__main__":
     main()
