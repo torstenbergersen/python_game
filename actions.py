@@ -1,7 +1,6 @@
 class Action:
     pass
 
-
 class EscapeAction(Action):
   pass
 
