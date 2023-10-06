@@ -2,6 +2,7 @@
 import tcod
 
 from actions import EscapeAction, MovementAction
+from entity import Entity
 from input_handlers import EventHandler
 
 # define variables for screen size
@@ -9,16 +10,18 @@ def main() -> None:
     screen_width = 80
     screen_height = 50
 
-    #keep track of player position
-    player_x = int(screen_width / 2)
-    player_y = int(screen_height / 2)
-
+  
     # telling tcod which font to use
     tileset = tcod.tileset.load_tilesheet(
         "dejavu10x10_gs_tc.png", 32, 8, tcod.tileset.CHARMAP_TCOD
     )
 
     event_handler = EventHandler()
+
+    # entity handling
+    player = Entity(int(screen_width / 2), int(screen_height / 2), "@", (255, 255, 255))
+    npc = Entity(int(screen_width / 2 - 5), int(screen_height / 2), "@", (255, 255, 0))
+    entities = {npc, player}
 
     # create screen and title
     with tcod.context.new_terminal(
@@ -36,8 +39,8 @@ def main() -> None:
         # game loop
         while True:
             
-            # create @ symbol and put in place
-            root_console.print(x=player_x, y=player_y, string="@")
+            # Draw function
+            root_console.print(x=player.x, y=player.y, string=player.char, fg=player.color)
 
             # update screen with current information
             context.present(root_console)
@@ -52,10 +55,9 @@ def main() -> None:
                 if action is None:
                     continue
 
-                # update user coordinates with movement action
+                # update coordinates with movement action
                 if isinstance(action, MovementAction):
-                    player_x += action.dx
-                    player_y += action.dy
+                    player.move(dx=action.dx, dy=action.dy)
                 
                 elif isinstance(action, EscapeAction):
                     raise SystemExit()
